@@ -1,0 +1,25 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./data/database.sqlite"
+}
+
+model User {
+  id      String  @id @default(uuid())
+  username String @unique
+  referred_by String?
+}
+
+model GameSession {
+  id        String  @id @default(uuid())
+  session_id String
+  userId    String? 
+  city      String
+  cluesGiven Int    @default(0)
+  isActive Boolean
+  wrong_attempts Int @default(0)
+  points_scored Int @default(0)
+}
