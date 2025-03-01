@@ -64,9 +64,12 @@ export default function GamePage() {
   }, []);
 
   useEffect(() => {
-    let n = document.getElementById("shareableComponent");
-    setnode(n);
-  }, []);
+    if (!isLoading) {
+      let n = document.getElementById("shareableComponent");
+      console.log(isLoading, n);
+      setnode(n);
+    }
+  }, [isLoading]);
 
   const getNewClue = async () => {
     const session_id = localStorage.getItem("session_id");
@@ -186,14 +189,16 @@ export default function GamePage() {
       {/* Top Bar */}
       <div className="w-full flex justify-between items-center p-4 bg-[#222222] border-b border-yellow-400">
         <div>
-          <Button
-            onClick={shareGame}
-            className="bg-yellow-400 text-black font-bold text-base md:text-lg px-6 py-4 shadow-[4px_4px_0px_black] hover:shadow-[6px_6px_0px_black] transition-all duration-200 hover:bg-yellow-500 font-mono"
-          >
-            Challenge a Friend
-          </Button>
+          {!isLoading && (
+            <Button
+              onClick={shareGame}
+              className="bg-yellow-400 text-black font-bold text-base md:text-lg px-6 py-4 shadow-[4px_4px_0px_black] hover:shadow-[6px_6px_0px_black] transition-all duration-200 hover:bg-yellow-500 font-mono"
+            >
+              Challenge a Friend
+            </Button>
+          )}
         </div>
-        <span>You may experience delay in responses</span>
+        {/* <span>You may experience delay in responses</span> */}
         <div className="flex gap-4 items-center mr-4">
           <span className="text-xl font-bold text-yellow-400">
             Points: {points}
@@ -246,8 +251,8 @@ export default function GamePage() {
           </Button>
         </div>
       ) : (
-        <div className="flex items-center justify-center">
-          <h1 className="text-white font-bold text-2xl">Loading</h1>
+        <div className="flex items-center justify-center mt-4">
+          <h1 className="text-white font-bold text-2xl">Loading...</h1>
         </div>
       )}
 
