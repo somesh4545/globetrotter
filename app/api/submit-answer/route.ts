@@ -1,14 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import cities from "../data.json";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
-function shuffleArray(array: string[]): string[] {
-  return array.sort(() => Math.random() - 0.5);
-}
-
-export async function POST(req: any, res: any) {
+export async function POST(req: NextRequest) {
   const body = await req.json();
   let { session_id, city_guess } = body;
   try {

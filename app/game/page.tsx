@@ -3,12 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogOverlay,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogOverlay } from "@/components/ui/dialog";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import Confetti from "react-confetti";
 import Lottie from "lottie-react";
@@ -20,7 +15,6 @@ export default function GamePage() {
   const [incorrectAttempts, setIncorrectAttempts] = useState(0);
   const [showDialog, setShowDialog] = useState(false);
   const [showUsernameDialog, setshowUsernameDialog] = useState(false);
-  const [sessionDetails, setsessionDetails] = useState();
   const [username, setUserName] = useState<string>();
   const [clues, setClues] = useState([]);
   const [options, setOptions] = useState([]);
@@ -43,7 +37,7 @@ export default function GamePage() {
 
   useEffect(() => {
     startNewGame();
-  }, []);
+  });
 
   const startNewGame = async () => {
     setShowDialog(false);
@@ -60,7 +54,6 @@ export default function GamePage() {
       .then((data) => {
         setOptions(data.options);
         setClues(data.clues);
-        setsessionDetails(data.session_id);
         localStorage.setItem("session_id", data.session_id);
         updateStats(data.stats);
       });
@@ -114,9 +107,8 @@ export default function GamePage() {
       setshowUsernameDialog(true);
     } else {
       // Convert UI to image
-      var node = document.getElementById("shareableComponent");
+      let node = document.getElementById("shareableComponent");
       if (node) {
-        let img;
         dom2img
           .toBlob(node)
           .then(async function (blob) {
