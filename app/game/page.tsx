@@ -18,6 +18,7 @@ export default function GamePage() {
   const [username, setUserName] = useState<string>();
   const [clues, setClues] = useState([]);
   const [options, setOptions] = useState([]);
+  const [node, setnode] = useState<HTMLElement | null>(null);
   const [dialogContent, setDialogContent] = useState<{
     type: string;
     message: string;
@@ -34,10 +35,6 @@ export default function GamePage() {
       setDimensions({ width: offsetWidth, height: offsetHeight });
     }
   }, [showDialog]);
-
-  useEffect(() => {
-    startNewGame();
-  });
 
   const startNewGame = async () => {
     setShowDialog(false);
@@ -58,6 +55,15 @@ export default function GamePage() {
         updateStats(data.stats);
       });
   };
+
+  useEffect(() => {
+    startNewGame();
+  }, []);
+
+  useEffect(() => {
+    let n = document.getElementById("shareableComponent");
+    setnode(n);
+  }, []);
 
   const getNewClue = async () => {
     const session_id = localStorage.getItem("session_id");
@@ -107,7 +113,6 @@ export default function GamePage() {
       setshowUsernameDialog(true);
     } else {
       // Convert UI to image
-      let node = document.getElementById("shareableComponent");
       if (node) {
         dom2img
           .toBlob(node)
