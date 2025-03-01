@@ -11,6 +11,7 @@ import animationData from "@/public/sad.json";
 import dom2img from "dom-to-image";
 
 export default function GamePage() {
+  const [isLoading, setIsLoading] = useState(true);
   const [points, setPoints] = useState(0);
   const [incorrectAttempts, setIncorrectAttempts] = useState(0);
   const [showDialog, setShowDialog] = useState(false);
@@ -37,6 +38,7 @@ export default function GamePage() {
   }, [showDialog]);
 
   const startNewGame = async () => {
+    setIsLoading(true);
     setShowDialog(false);
     const session_id = localStorage.getItem("session_id");
     const username = localStorage.getItem("username");
@@ -53,6 +55,7 @@ export default function GamePage() {
         setClues(data.clues);
         localStorage.setItem("session_id", data.session_id);
         updateStats(data.stats);
+        setIsLoading(false);
       });
   };
 
@@ -190,6 +193,7 @@ export default function GamePage() {
             Challenge a Friend
           </Button>
         </div>
+        <span>You may experience delay in responses</span>
         <div className="flex gap-4 items-center mr-4">
           <span className="text-xl font-bold text-yellow-400">
             Points: {points}
@@ -199,46 +203,53 @@ export default function GamePage() {
           </span>
         </div>
       </div>
-      <div
-        id="shareableComponent"
-        ref={shareUIRef}
-        className="flex items-center justify-center flex-col p-4"
-      >
-        <div className="mb-4 text-center">
-          <h1 className="font-extrabold text-4xl text-yellow-400 drop-shadow-lg">
-            Guess the City!
-          </h1>
-          {clues.map((clue, i) => {
-            return (
-              <p
-                key={i}
-                className="text-lg mt-4 max-w-lg text-gray-300 bg-[#333333] p-4 rounded-lg"
-              >
-                {clue}
-              </p>
-            );
-          })}
-        </div>
 
-        {/* Options */}
-        <div className="grid grid-cols-2 md:grid-cols-2 gap-4 md:gap-6 mt-8">
-          {options.map((option) => (
-            <Button
-              key={option}
-              className="bg-yellow-400 text-black  text-2xl px-8 py-4 shadow-[4px_4px_0px_black] hover:shadow-[6px_6px_0px_black] transition-all duration-200 hover:bg-yellow-500 font-mono"
-              onClick={() => handleGuess(option)}
-            >
-              {option}
-            </Button>
-          ))}
-        </div>
-        <Button
-          onClick={getNewClue}
-          className="mt-10  bg-blue-500 text-white  text-2xl px-6 py-4 shadow-[4px_4px_0px_black] border-2 border-blue-500 hover:shadow-[6px_6px_0px_black] hover:bg-blue-600 transition-all duration-200 font-mono"
+      {!isLoading ? (
+        <div
+          id="shareableComponent"
+          ref={shareUIRef}
+          className="flex items-center justify-center flex-col p-4"
         >
-          Get Next Clue
-        </Button>
-      </div>
+          <div className="mb-4 text-center">
+            <h1 className="font-extrabold text-4xl text-yellow-400 drop-shadow-lg">
+              Guess the City!
+            </h1>
+            {clues.map((clue, i) => {
+              return (
+                <p
+                  key={i}
+                  className=" text-lg mt-4 max-w-lg text-gray-300 bg-[#333333] p-4 rounded-lg"
+                >
+                  {clue}
+                </p>
+              );
+            })}
+          </div>
+
+          {/* Options */}
+          <div className="grid grid-cols-2 md:grid-cols-2 gap-4 md:gap-6 mt-8">
+            {options.map((option) => (
+              <Button
+                key={option}
+                className="cursor-pointer bg-yellow-400 text-black  text-2xl px-8 py-4 shadow-[4px_4px_0px_black] hover:shadow-[6px_6px_0px_black] transition-all duration-200 hover:bg-yellow-500 font-mono"
+                onClick={() => handleGuess(option)}
+              >
+                {option}
+              </Button>
+            ))}
+          </div>
+          <Button
+            onClick={getNewClue}
+            className="mt-10  bg-blue-500 text-white  text-2xl px-6 py-4 shadow-[4px_4px_0px_black] border-2 border-blue-500 hover:shadow-[6px_6px_0px_black] hover:bg-blue-600 transition-all duration-200 font-mono"
+          >
+            Get Next Clue
+          </Button>
+        </div>
+      ) : (
+        <div className="flex items-center justify-center">
+          <h1 className="text-white font-bold text-2xl">Loading</h1>
+        </div>
+      )}
 
       <Dialog open={showUsernameDialog} onOpenChange={setshowUsernameDialog}>
         <DialogOverlay className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center">
@@ -265,6 +276,7 @@ export default function GamePage() {
           </DialogContent>
         </DialogOverlay>
       </Dialog>
+
       {/* Retro Dialog */}
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
         <DialogOverlay className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center">
