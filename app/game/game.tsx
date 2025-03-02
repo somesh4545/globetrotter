@@ -203,7 +203,7 @@ export default function GamePage() {
           <span className="text-xl font-bold text-yellow-400">
             Points: {points}
           </span>
-          <span className="text-gray-400">
+          <span className="text-gray-400 hidden md:flex">
             Incorrect Attempts: {incorrectAttempts}
           </span>
         </div>
@@ -255,6 +255,9 @@ export default function GamePage() {
           <h1 className="text-white font-bold text-2xl">Loading...</h1>
         </div>
       )}
+      <span className="">
+        The API response may be delayed as it is hosted on a free tier.
+      </span>
 
       <Dialog open={showUsernameDialog} onOpenChange={setshowUsernameDialog}>
         <DialogOverlay className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center">

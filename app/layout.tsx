@@ -1,4 +1,5 @@
-import type { Metadata } from "next";
+"use client";
+
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -12,20 +13,29 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "The Globetrotter Challenge",
-};
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import Loading from "./loading"; // Import your spinner component
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname(); // Detect page changes
+
+  useEffect(() => {
+    setLoading(true);
+    const timeout = setTimeout(() => setLoading(false), 500); // Delay for smooth transition
+    return () => clearTimeout(timeout);
+  }, [pathname]); // Run effect when pathname changes
+
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body>
+        {loading && <Loading />}
         {children}
       </body>
     </html>
